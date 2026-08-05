@@ -5,9 +5,6 @@
   font-family: Arial, sans-serif;
 }
 
-/* =========================
-   ADMIN SIDEBAR
-========================= */
 .admin-sidebar {
   position: fixed;
   left: 0;
@@ -69,10 +66,6 @@
 
   font-weight: 600;
 }
-
-/* =========================
-   ADMIN CONTAINER
-========================= */
 .admin-container {
   margin-left: 250px;
   padding: 30px;
@@ -102,7 +95,7 @@
   color: #1f2937;
 }
 
-/* BANNER */
+
 .welcome-banner {
   background: linear-gradient(135deg, #1f2937, #374151);
   color: white;
@@ -157,7 +150,7 @@
   font-weight: 600;
 }
 
-/* TABLE */
+
 .section-title {
   font-size: 20px;
   font-weight: 700;
@@ -195,7 +188,7 @@
   background: #f0fdfa;
 }
 
-/* STATUS */
+
 .status-pending {
   background: #fef3c7;
   color: #92400e;
@@ -223,7 +216,7 @@
   font-size: 13px;
 }
 
-/* PRIORITY */
+
 .priority-low {
   color: #16a34a;
   font-weight: 700;
@@ -266,4 +259,226 @@
     text-align: center;
     gap: 15px;
   }
+}
+
+.notifications-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.admin-notification-card {
+  background: white;
+  padding: 22px;
+  border-radius: 18px;
+
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+
+  transition: 0.3s;
+}
+
+.admin-notification-card:hover {
+  transform: translateY(-3px);
+}
+
+.notification-badge {
+  width: 55px;
+  height: 55px;
+
+  border-radius: 50%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.badge-critical {
+  background: #fee2e2;
+}
+
+.badge-high {
+  background: #fef3c7;
+}
+
+.badge-normal {
+  background: #dcfce7;
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-content h3 {
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.notification-content p {
+  color: #1f2937;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.notification-time {
+  color: #94a3b8;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+
+
+.complaints-grid {
+display: grid;
+grid-template-columns: repeat(2, minmax(0, 1fr));
+gap: 25px;
+}
+
+.complaint-card {
+background: #ffffff;
+border-radius: 18px;
+padding: 20px;
+box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+transition: 0.3s ease;
+display: flex;
+flex-direction: column;
+}
+
+.complaint-card:hover {
+transform: translateY(-4px);
+box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+.complaint-card h3 {
+color: #064e3b;
+margin: 15px 0 12px;
+}
+
+.complaint-card p {
+color: #374151;
+margin: 6px 0;
+line-height: 1.5;
+}
+
+.complaint-card label {
+display: block;
+margin-bottom: 6px;
+margin-top: 10px;
+font-weight: 600;
+color: #1f2937;
+}
+
+.complaint-card select {
+width: 100%;
+padding: 10px;
+border-radius: 8px;
+border: 1px solid #d1d5db;
+outline: none;
+margin-bottom: 8px;
+background: white;
+}
+
+.complaint-image-container {
+width: 100%;
+height: 230px;
+border-radius: 14px;
+overflow: hidden;
+border: 2px dashed #d1d5db;
+background: #f8fafc;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.complaint-image {
+width: 100%;
+height: 100%;
+object-fit: cover;
+cursor: pointer;
+transition: 0.3s;
+}
+
+.complaint-image:hover {
+transform: scale(1.04);
+}
+
+.no-image {
+width: 100%;
+height: 100%;
+background: linear-gradient(135deg, #f8fafc, #edf2f7);
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+color: #64748b;
+text-align: center;
+}
+
+.no-image-icon {
+font-size: 60px;
+margin-bottom: 12px;
+opacity: 0.7;
+}
+
+.no-image p {
+font-size: 16px;
+font-weight: 600;
+color: #64748b;
+}
+
+.image-modal {
+position: fixed;
+inset: 0;
+background: rgba(0, 0, 0, 0.8);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 9999;
+}
+
+.image-modal-content {
+position: relative;
+width: 90%;
+max-width: 900px;
+}
+
+.image-modal-content img {
+width: 100%;
+max-height: 85vh;
+object-fit: contain;
+border-radius: 15px;
+background: white;
+}
+
+.close-image {
+position: absolute;
+top: -15px;
+right: -15px;
+width: 42px;
+height: 42px;
+border: none;
+border-radius: 50%;
+background: #dc2626;
+color: white;
+font-size: 20px;
+cursor: pointer;
+font-weight: bold;
+transition: 0.3s;
+}
+
+.close-image:hover {
+background: #b91c1c;
+transform: rotate(90deg);
+}
+
+@media (max-width: 992px) {
+.complaints-grid {
+grid-template-columns: 1fr;
+}
 }

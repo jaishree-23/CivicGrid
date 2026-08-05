@@ -42,7 +42,25 @@ const complaintSchema = new mongoose.Schema(
         type: String,
         enum: ["Low", "Medium", "High", "Critical"],
         default: "Medium"
-    }
+    },
+
+    // Complaint History Timeline
+    timeline: [
+        {
+            status: {
+                type: String
+            },
+
+            message: {
+                type: String
+            },
+
+            date: {
+                type: Date,
+                default: Date.now
+            }
+        }
+    ]
 },
 {
     timestamps: true

@@ -21,65 +21,60 @@ function RaiseComplaint() {
 
   const [image, setImage] = useState(null);
 
-  // 📍 FINAL IMPROVED REAL ADDRESS LOCATION FUNCTION
   const useCurrentLocation = () => {
-    if (!navigator.geolocation) {
-      alert("Geolocation not supported");
-      return;
-    }
+if (!navigator.geolocation) {
+alert("Geolocation not supported");
+return;
+}
 
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        try {
-          const { latitude, longitude } = position.coords;
+navigator.geolocation.getCurrentPosition(
+async (position) => {
+try {
+const latitude = position.coords.latitude;
+const longitude = position.coords.longitude;
 
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}&addressdetails=1`
-          );
 
-          const data = await res.json();
+    console.log("Latitude:", latitude);
+    console.log("Longitude:", longitude);
+    console.log("Accuracy:", position.coords.accuracy);
 
-          const addr = data.address || {};
-
-          const fullAddress = [
-            addr.house_number,
-            addr.road,
-            addr.neighbourhood,
-            addr.suburb,
-            addr.village,
-            addr.town,
-            addr.city,
-            addr.state,
-            addr.postcode,
-            addr.country
-          ]
-            .filter(Boolean)
-            .join(", ");
-
-          setFormData((prev) => ({
-            ...prev,
-            location:
-              fullAddress ||
-              data.display_name ||
-              `${latitude}, ${longitude}`
-          }));
-
-        } catch (error) {
-          console.log(error);
-          alert("Failed to fetch address");
-        }
-      },
-      (error) => {
-        console.log(error);
-        alert("Please allow location access");
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0
-      }
+    const response = await fetch(
+   `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}&addressdetails=1`
     );
-  };
+
+    const data = await response.json();
+
+    const address =
+      data.display_name ||
+      `${latitude}, ${longitude}`;
+
+    setFormData((prev) => ({
+      ...prev,
+      location: address
+    }));
+
+    console.log("Full Address:", address);
+
+  } catch (error) {
+    console.log(error);
+    alert("Failed to fetch address");
+  }
+},
+
+(error) => {
+  console.error(error);
+  alert("Please allow location access");
+},
+
+{
+  enableHighAccuracy: true,
+  timeout: 10000,
+  maximumAge: 0
+}
+
+
+);
+};
 
   const handleChange = (e) => {
     setFormData({
@@ -89,37 +84,67 @@ function RaiseComplaint() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+e.preventDefault();
 
-    try {
-      const data = new FormData();
+try {
+const data = new FormData();
 
-      data.append("userId", localStorage.getItem("userId"));
-      data.append("category", formData.category);
-      data.append("description", formData.description);
-      data.append("location", formData.location);
 
-      if (image) {
-        data.append("image", image);
-      }
+data.append("userId", localStorage.getItem("userId"));
+data.append("category", formData.category);
+data.append("description", formData.description);
+data.append("location", formData.location);
 
-      await API.post("/complaints/create", data);
+if (image) {
+  data.append("image", image);
+}
 
-      alert("Complaint Submitted Successfully");
+const res = await API.post("/complaints/create", data);
 
-      setFormData({
-        category: "",
-        description: "",
-        location: ""
-      });
+alert(res.data.message);
 
-      setImage(null);
+setFormData({
+  category: "",
+  description: "",
+  location: ""
+});
 
-    } catch (error) {
-      console.log(error);
-      alert("Failed to submit complaint");
-    }
-  };
+setImage(null);
+} catch (error) {
+console.log(error);
+
+if (error.response && error.response.status === 409) {
+
+  const data = error.response.data;
+
+  alert(
+`⚠ DUPLICATE COMPLAINT FOUND
+
+📂 Category:
+${data.category}
+
+📍 Location:
+${data.location}
+
+🚧 Current Status:
+${data.status}
+
+🏢 Department:
+${data.department}
+
+ℹ️ A similar complaint has already been raised.
+
+Please track the existing complaint instead of creating a new one.`
+  );
+
+  return;
+} else {
+  alert("Failed to submit complaint");
+}
+
+
+}
+};
 
   return (
     <>

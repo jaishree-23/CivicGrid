@@ -25,10 +25,13 @@ function UserDashboard() {
   const [totalComplaints, setTotalComplaints] = useState(0);
   const [resolvedComplaints, setResolvedComplaints] = useState(0);
   const [pendingComplaints, setPendingComplaints] = useState(0);
+  const [inProgressComplaints, setInProgressComplaints] = useState(0);
+  const [unreadCount, setUnreadCount] = useState(0);
 
-  useEffect(() => {
-    fetchComplaintStats();
-  }, []);
+ useEffect(() => {
+  fetchComplaintStats();
+  fetchUnreadCount();
+}, []);
 
   const fetchComplaintStats = async () => {
     try {
@@ -41,24 +44,40 @@ function UserDashboard() {
       const complaints = res.data;
 
       setTotalComplaints(complaints.length);
+const resolved = complaints.filter(
+  (c) => c.status === "Resolved"
+).length;
 
-      const resolved = complaints.filter(
-        (c) => c.status === "Resolved"
-      ).length;
+const pending = complaints.filter(
+  (c) => c.status === "Pending"
+).length;
 
-      const pending = complaints.filter(
-        (c) =>
-          c.status === "Pending" ||
-          c.status === "In Progress"
-      ).length;
+const inProgress = complaints.filter(
+  (c) => c.status === "In Progress"
+).length;
 
-      setResolvedComplaints(resolved);
-      setPendingComplaints(pending);
-
+setResolvedComplaints(resolved);
+setPendingComplaints(pending);
+setInProgressComplaints(inProgress);
+      
     } catch (error) {
       console.log(error);
     }
   };
+  const fetchUnreadCount = async () => {
+  try {
+    const userId = localStorage.getItem("userId");
+
+    const res = await API.get(
+      `/notifications/unread/${userId}`
+    );
+
+    setUnreadCount(res.data.count);
+
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   return (
     <>
@@ -66,7 +85,7 @@ function UserDashboard() {
 
       <div className="dashboard-container">
 
-        {/* HEADER */}
+        
         <div className="dashboard-header">
 
           <div className="brand">
@@ -79,15 +98,37 @@ function UserDashboard() {
               Hello, {userName}
             </span>
 
-        
-            <span
-              className="notification-icon"
-              onClick={() => navigate("/notifications")}
-              style={{ cursor: "pointer" }}
-              title="Notifications"
-            >
-              <FaBell />
-            </span>
+        <div
+  style={{
+    position: "relative",
+    cursor: "pointer"
+  }}
+  onClick={() => navigate("/notifications")}
+>
+  <FaBell className="notification-icon" />
+
+  {unreadCount > 0 && (
+    <span
+      style={{
+        position: "absolute",
+        top: "-8px",
+        right: "-8px",
+        background: "red",
+        color: "white",
+        borderRadius: "50%",
+        minWidth: "18px",
+        height: "18px",
+        fontSize: "11px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontWeight: "bold"
+      }}
+    >
+      {unreadCount}
+    </span>
+  )}
+</div>
 
           </div>
 
@@ -116,25 +157,31 @@ function UserDashboard() {
 
         <div className="stats-grid">
 
-          <div className="stat-card">
-            <div className="stat-icon">📊</div>
-            <h3>{totalComplaints}</h3>
-            <p>Total Complaints</p>
-          </div>
+  <div className="stat-card">
+    <div className="stat-icon">📊</div>
+    <h3>{totalComplaints}</h3>
+    <p>Total Complaints</p>
+  </div>
 
-          <div className="stat-card">
-            <div className="stat-icon success">✅</div>
-            <h3>{resolvedComplaints}</h3>
-            <p>Resolved</p>
-          </div>
+  <div className="stat-card">
+    <div className="stat-icon success">✅</div>
+    <h3>{resolvedComplaints}</h3>
+    <p>Resolved</p>
+  </div>
 
-          <div className="stat-card">
-            <div className="stat-icon warning">⏳</div>
-            <h3>{pendingComplaints}</h3>
-            <p>Pending</p>
-          </div>
+  <div className="stat-card">
+    <div className="stat-icon warning">⏳</div>
+    <h3>{pendingComplaints}</h3>
+    <p>Pending</p>
+  </div>
 
-        </div>
+  <div className="stat-card">
+    <div className="stat-icon">🚧</div>
+    <h3>{inProgressComplaints}</h3>
+    <p>In Progress</p>
+  </div>
+
+</div>
 
        
         <h3 className="section-title">

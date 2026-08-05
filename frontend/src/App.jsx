@@ -8,7 +8,10 @@ import AdminDashboard from "./pages/AdminDashboard";
 import RaiseComplaint from "./pages/RaiseComplaint";
 import MyComplaints from "./pages/MyComplaints";
 import TrackComplaint from "./pages/TrackComplaint";
-import Notifications from "./pages/Notifications"; // ✅ ADD THIS
+import Notifications from "./pages/Notifications"; 
+import AdminComplaints from "./pages/AdminComplaints";
+import AdminAnalytics from "./pages/AdminAnalytics";
+import AdminNotifications from "./pages/AdminNotifications";
 
 function App() {
   return (
@@ -26,8 +29,11 @@ function App() {
         <Route path="/track-complaint" element={<TrackComplaint />} />
         <Route path="/notifications" element={<Notifications />} /> {/* ✅ FIX HERE */}
 
-        {/* ADMIN */}
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        
+<Route path="/admin-dashboard" element={<AdminDashboard />} />
+<Route path="/admin-complaints" element={<AdminComplaints />} />
+<Route path="/admin-analytics" element={<AdminAnalytics />} />
+<Route path="/admin-notifications" element={<AdminNotifications />} />
 
       </Routes>
     </BrowserRouter>

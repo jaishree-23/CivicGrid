@@ -13,6 +13,7 @@ function Login() {
   });
 
   const [error, setError] = useState("");
+  const [loginType, setLoginType] = useState("user");
 
   const handleChange = (e) => {
     setFormData({
@@ -44,7 +45,6 @@ function Login() {
 
   return (
     <div className="login-page">
-
       <div className="login-card">
 
         <div className="logo-section">
@@ -54,15 +54,82 @@ function Login() {
 
           <h3>Real Time Civic Compliance System</h3>
 
-          <p>
-            Connecting Citizens & Civic Services
-          </p>
+          <p>Connecting Citizens & Civic Services</p>
+        </div>
+
+        <h3 style={{ textAlign: "center", marginBottom: "15px" }}>
+          {loginType === "admin"
+            ? "Welcome Admin 👨‍💼"
+            : "Welcome User 👋"}
+        </h3>
+
+        {/* Role Selection */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "30px",
+            marginBottom: "20px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+            }}
+          >
+            <input
+              type="radio"
+              id="user"
+              name="loginType"
+              value="user"
+              checked={loginType === "user"}
+              onChange={(e) => setLoginType(e.target.value)}
+            />
+
+            <span
+              style={{
+                color: "#222",
+                fontWeight: "600",
+                fontSize: "15px",
+              }}
+            >
+              User
+            </span>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+            }}
+          >
+            <input
+              type="radio"
+              id="admin"
+              name="loginType"
+              value="admin"
+              checked={loginType === "admin"}
+              onChange={(e) => setLoginType(e.target.value)}
+            />
+
+            <span
+              style={{
+                color: "#222",
+                fontWeight: "600",
+                fontSize: "15px",
+              }}
+            >
+              Admin
+            </span>
+          </div>
         </div>
 
         {error && <div className="error-box">{error}</div>}
 
         <form onSubmit={handleSubmit}>
-
           <div className="input-group">
             <label>Email Address</label>
 
@@ -90,7 +157,6 @@ function Login() {
           <button type="submit" className="login-btn">
             Login
           </button>
-
         </form>
 
         <p className="register-text">
@@ -99,7 +165,6 @@ function Login() {
         </p>
 
       </div>
-
     </div>
   );
 }

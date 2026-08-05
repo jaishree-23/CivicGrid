@@ -1,28 +1,66 @@
 const Notification = require("../models/Notification");
 
+/* GET ALL NOTIFICATIONS */
 const getNotifications = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    // DEBUG: check if API is receiving correct userId
-    console.log("Fetching notifications for userId:", userId);
-
-    if (!userId) {
-      return res.status(400).json({
-        message: "UserId is required"
-      });
-    }
-
-    const notifications = await Notification.find({ userId })
-      .sort({ createdAt: -1 });
-
-    console.log("Notifications found:", notifications.length);
+    const notifications = await Notification.find({
+      userId
+    }).sort({
+      createdAt: -1
+    });
 
     return res.status(200).json(notifications);
 
   } catch (error) {
-    console.error("Notification fetch error:", error);
+    return res.status(500).json({
+      message: error.message
+    });
+  }
+};
 
+/* GET UNREAD COUNT */
+const getUnreadCount = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const count = await Notification.countDocuments({
+      userId,
+      isRead: false
+    });
+
+    return res.status(200).json({
+      count
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message
+    });
+  }
+};
+
+/* MARK ALL AS READ */
+const markAsRead = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    await Notification.updateMany(
+      {
+        userId,
+        isRead: false
+      },
+      {
+        isRead: true
+      }
+    );
+
+    return res.status(200).json({
+      message: "Notifications marked as read"
+    });
+
+  } catch (error) {
     return res.status(500).json({
       message: error.message
     });
@@ -30,5 +68,7 @@ const getNotifications = async (req, res) => {
 };
 
 module.exports = {
-  getNotifications
+  getNotifications,
+  getUnreadCount,
+  markAsRead
 };

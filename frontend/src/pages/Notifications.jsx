@@ -8,15 +8,32 @@ function Notifications() {
 
   useEffect(() => {
     fetchNotifications();
+    markNotificationsRead();
   }, []);
 
   const fetchNotifications = async () => {
     try {
       const userId = localStorage.getItem("userId");
 
-      const res = await API.get(`/notifications/${userId}`);
+      const res = await API.get(
+        `/notifications/${userId}`
+      );
 
       setNotifications(res.data);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const markNotificationsRead = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+
+      await API.put(
+        `/notifications/read/${userId}`
+      );
+
     } catch (error) {
       console.log(error);
     }
@@ -24,34 +41,58 @@ function Notifications() {
 
   return (
     <>
-      {/* ✅ SIDEBAR ADDED */}
       <UserSidebar />
 
       <div className="dashboard-container">
 
-        {/* HEADER */}
         <div className="page-header">
           <h1>🔔 My Notifications</h1>
-          <p>All updates related to your complaints</p>
+
+          <p>
+            All updates related to your complaints
+          </p>
         </div>
 
-        {/* CONTENT */}
         {notifications.length === 0 ? (
+
           <div className="empty-state">
             <h2>No Notifications</h2>
-            <p>You don’t have any updates yet</p>
+
+            <p>
+              You don't have any updates yet
+            </p>
           </div>
+
         ) : (
+
           <div className="complaints-grid">
+
             {notifications.map((n) => (
-              <div className="complaint-card" key={n._id}>
+
+              <div
+                className="complaint-card"
+                key={n._id}
+                style={{
+                  borderLeft:
+                    n.isRead === false
+                      ? "5px solid #059669"
+                      : "none"
+                }}
+              >
                 <p>{n.message}</p>
+
                 <small>
-                  {new Date(n.createdAt).toLocaleString()}
+                  {new Date(
+                    n.createdAt
+                  ).toLocaleString()}
                 </small>
+
               </div>
+
             ))}
+
           </div>
+
         )}
 
       </div>
